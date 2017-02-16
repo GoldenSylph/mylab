@@ -1,22 +1,20 @@
 package com.bedrin.algebras.linear;
 
+import java.util.Arrays;
+
 public class MainGaussAlgoruthmTest {
 
 	public static void main(String[] args) {
 		
-		Equation[] test = {
-			new Equation(1, 0, 1),
-			new Equation(0, 1, 1),
-			new Equation(1, 1, 0)
+		EquationDouble[] test = {
+			new EquationDouble(1, 0, 1),
+			new EquationDouble(0, 1, 1),
+			new EquationDouble(1, 1, 0)
 		};
 		
-		LinearSystem ls = new LinearSystem(test);
-		ls.print();
-		GaussAlgorithm ga = new GaussAlgorithm(ls);
-		ga.calculateDeterminant();
-		System.out.println(ga.getDeterminant());
-		
-		
+		System.out.println(Arrays.toString(test));
+		System.out.println(GaussAlgorithm.calculateDeterminant(test));
+		System.out.println(Arrays.toString(test));
 	}
 	
 }

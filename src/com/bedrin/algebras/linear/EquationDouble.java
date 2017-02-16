@@ -5,18 +5,18 @@ import java.util.ArrayList;
 import com.bedrin.algebras.exceptions.EqualityException;
 import com.bedrin.algebras.linear.interfaces.IEquation;
 
-public class Equation implements IEquation{
+public class EquationDouble implements IEquation {
 
 	private ArrayList<Double> parametres;
 	
-	public Equation(double... parametres) {
+	public EquationDouble(double... parametres) {
 		this.parametres = new ArrayList<Double>();
 		for (double d : parametres) {
 			this.parametres.add(d);
 		}
 	}
 	
-	public Equation(IEquation e) {
+	public EquationDouble(IEquation e) {
 		this.parametres = new ArrayList<Double>();
 		for (int i = 0; i < e.size(); i++) {
 			this.parametres.add(e.getParameter(i));
@@ -49,6 +49,20 @@ public class Equation implements IEquation{
 	@Override
 	public double getParameter(int index) {
 		return this.parametres.get(index);
+	}
+	
+	@Override
+	protected Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
+	@Override
+	public String toString() {
+		StringBuilder sb = new StringBuilder();
+		for (Double p : parametres) {
+			sb.append(p).append(" ");
+		}
+		return sb.toString();
 	}
 
 	@Override

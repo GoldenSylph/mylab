@@ -5,7 +5,7 @@ import java.util.List;
 
 import com.bedrin.algebras.linear.interfaces.IEquation;
 
-public class LinearSystem {
+public class LinearSystem implements Cloneable {
 	
 	private List<IEquation> items;
 	
@@ -15,11 +15,7 @@ public class LinearSystem {
 			this.items.add(t);
 		}
 	}
-	
-	public LinearSystem() {
-		this.items = new ArrayList<IEquation>();
-	}
-	
+
 	public IEquation get(int index) {
 		return this.items.get(index);
 	}
@@ -34,22 +30,6 @@ public class LinearSystem {
 	
 	public double parameterAt(int i, int j) {
 		return this.items.get(i).getParameter(j);
-	}
-	
-	public List<IEquation> getItems() {
-		return this.items;
-	}
-	
-	public void setItems(List<IEquation> items) {
-		if (this.items.size() == items.size()) {
-			this.items = items;
-		} else {
-			throw new RuntimeException("Setting denied.");
-		}
-	}
-	
-	public void copyTo(LinearSystem to) {
-		to.setItems(this.getItems());
 	}
 	
 	public void print(){

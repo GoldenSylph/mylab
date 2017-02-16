@@ -2,6 +2,8 @@ package com.bedrin.algebras.linear;
 
 import java.util.ArrayList;
 
+import com.bedrin.algebras.linear.interfaces.IEquation;
+
 public class GaussAlgorithm {
 
 	private LinearSystem system;
@@ -21,25 +23,33 @@ public class GaussAlgorithm {
 		this.system.print();
 	}
 	
-	private void convertToLadderForm(LinearSystem system) {
-		for(int i = 0; i < system.size() - 1; i++) {
-			for(int j = i + 1; j < system.size(); j++) {
-				double temp = system.get(i).findCoefficient(system.get(i).getParameter(i), system.get(j).getParameter(i));
-				Equation tmp = new Equation(system.get(i));
+	public static void convertToLadderForm(LinearSystem sys) {
+		for(int i = 0; i < sys.size() - 1; i++) {
+			for(int j = i + 1; j < sys.size(); j++) {
+				double temp = sys.get(i).findCoefficient(sys.get(i).getParameter(i), sys.get(j).getParameter(i));
+				EquationDouble tmp = new EquationDouble(sys.get(i));
 				tmp.mul(temp);
-				system.get(j).addEquation(tmp);
+				sys.get(j).addEquation(tmp);
 			}
 		}
 	}
 	
-	public void calculateDeterminant() {
-		LinearSystem temp = new LinearSystem();
-		this.system.copyTo(temp);
+	public static double calculateDeterminant(IEquation... eqs) {
+		LinearSystem temp = new LinearSystem(eqs.clone());
 		convertToLadderForm(temp);
-		temp.print();
 		double n = 1;
 		for(int i = 0; i < temp.size(); i++) {
 			n = n * temp.get(i).getParameter(i);
+		}		
+		return n;
+	}
+	
+	public void calculateDeterminant() {
+		convertToLadderForm(this.system);
+		this.system.print();
+		double n = 1;
+		for(int i = 0; i < this.system.size(); i++) {
+			n = n * this.system.get(i).getParameter(i);
 		}		
 		this.determinant = n;
 		
