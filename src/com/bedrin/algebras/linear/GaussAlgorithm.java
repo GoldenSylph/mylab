@@ -35,7 +35,7 @@ public class GaussAlgorithm {
 	}
 	
 	public static double calculateDeterminant(IEquation... eqs) {
-		LinearSystem temp = new LinearSystem(eqs.clone());
+		LinearSystem temp = new LinearSystem(eqs);
 		convertToLadderForm(temp);
 		double n = 1;
 		for(int i = 0; i < temp.size(); i++) {
