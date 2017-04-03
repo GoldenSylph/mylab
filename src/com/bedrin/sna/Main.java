@@ -1,19 +1,22 @@
 package com.bedrin.sna;
 
+import com.bedrin.sna.structures.BilliardsHeap;
 import com.bedrin.sna.structures.MyBinaryHeap;
-import com.bedrin.sna.structures.MyListOL;
 import com.bedrin.sna.structures.MyListTL;
+import com.bedrin.sna.structures.MyQueueWithStacks;
 import com.bedrin.sna.structures.MyStack;
+import com.bedrin.sna.utils.Ball;
 
 public class Main {
 	
 	public static void main(String[] args) {
-		bracketsExercise();
+		//billiardHeap();
 		//heapTest();
+		//listTest();
+		myQueueWithMinTest();
 	}
 	
 	public static void bracketsExercise() {
-		
 		String simpleRight = "(())((()())(()))";
 		String simpleWrong = "((()";
 		String complexRight = "([])[{{}()}]";
@@ -36,14 +39,14 @@ public class Main {
 					case '(':
 					case '[':
 					case '{':
+					case '<':
 						workspace.add(t);
 						break;
-						
 					case ')':
 					case ']':
 					case '}':
-						//конвертировать открывающуюся скобку t в закрывающуюся
-						if(((char) workspace.top()) == t) {
+					case '>':
+						if(bracketsCheck((char) workspace.top(), t)) {
 							workspace.pop();
 						} else {
 							return false;
@@ -59,46 +62,68 @@ public class Main {
 		}
 	}
 	
-	private static void heapTest() {
-		MyBinaryHeap<Integer> h = new MyBinaryHeap<Integer>();
-		h.add(1);
+	private static boolean bracketsCheck(char a, char b) {
+		return (a == '(' && b == ')') || (a == '[' && b == ']') 
+				|| (a == '{' && b == '}') || (a == '<' && b == '>'); 
+	}
+	
+	public static void billiardHeap() {
+		BilliardsHeap<Ball> b = new BilliardsHeap<>();
+		b.add(new Ball(1));
+		b.add(new Ball(2));
+		b.add(new Ball(35));
+		b.add(new Ball(16));
+		b.add(new Ball(45));
+		b.add(new Ball(88));
+		b.add(new Ball(11));
+		b.add(new Ball(90));
+		b.add(new Ball(1000000));
+		System.out.println(b.getMin());
+	}
+	
+	public static void myQueueWithMinTest() {
+		MyQueueWithStacks<Integer> q = new MyQueueWithStacks<>();
+		q.push(5);
+		q.push(1);
+		q.push(9);
+		System.out.println(q.getMin());
+	}
+	
+	public static void heapTest() {
+		MyBinaryHeap<Integer> heap = new MyBinaryHeap<Integer>();
+		heap.add(4);
+		heap.add(2);
+		heap.add(6);
+		heap.add(1);
+		heap.add(3);
+		heap.add(5);
+		heap.add(7);
+		//heap.printRecursive(0);
+		//heap.printWithStack(0);
+		System.out.println(heap);
+		System.out.println(heap.sort());
 	}
 	
 	public static void listTest() {
-		MyListOL<Object> list = new MyListOL<Object>();
-		
-		list.add("Whatever you want!"); // 0
-		list.add(null); // 1
-		list.add(1); // 2
-		list.add(1.2f); // 3
-		list.add(1.3d); // 4
-		list.add(100000l); // 5
-		list.add("Абракадабра"); // 5
-		list.add("Ин вино - вэритас!"); // 5
-		
-		list.remove(0);
-		list.remove(3);
-		list.remove(5);
-		System.out.println(list.size());
-		System.out.println(list.get(0));
-		System.out.println(list.get(3));
-		System.out.println(list.get(4));
-		
-		MyListTL<Object> list2 = new MyListTL<Object>();
-		list2.add("Whatever you want!"); 
-		list2.add(null); 
-		list2.add(1); 
-		list2.add(1.2f); 
-		list2.add(1.3d); 
-		list2.add(100000l); 
-		list2.remove(1);
-		list2.insert(0, 2);
-		list2.insert(3, 10);
-		list2.insert(5, -100);
-		System.out.println(list2.size());
-		System.out.println(list2.get(0));
-		System.out.println(list2.get(3));
-		System.out.println(list2.get(5));
+		MyListTL<Object> list3 = new MyListTL<Object>();
+		list3.add(0); 
+		list3.add(1); 
+		list3.add(2); 
+		list3.add(3); 
+		list3.add(4);
+		System.out.println(list3.get(0));
+		System.out.println(list3.get(1));
+		System.out.println(list3.get(2));
+		System.out.println(list3.get(3));
+		System.out.println(list3.get(4));
+		list3.swap(4,  0);
+		System.out.println();
+		System.out.println(list3.get(0));
+		System.out.println(list3.get(1));
+		System.out.println(list3.get(2));
+		System.out.println(list3.get(3));
+		System.out.println(list3.get(4));
+			
 	}
 	
 }

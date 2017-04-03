@@ -1,14 +1,22 @@
 package com.bedrin.sna.structures;
 
+import java.util.Comparator;
+import java.util.function.UnaryOperator;
+
 import com.bedrin.sna.interfaces.IMyBinaryHeap;
-import com.bedrin.sna.utils.BinaryHeapElement;
 
 public class MyBinaryHeap<T extends Comparable<T>> implements IMyBinaryHeap<T> {
 
-	private MyListTL<T> list;
+	protected MyListTL<T> list;
+	protected Comparator<T> comparator;
 	
 	public MyBinaryHeap() {
 		this.list = new MyListTL<T>();
+	}
+	
+	public MyBinaryHeap(Comparator<T> comparator) {
+		this.list = new MyListTL<T>();
+		this.comparator = comparator;
 	}
 
 	@Override
@@ -17,50 +25,21 @@ public class MyBinaryHeap<T extends Comparable<T>> implements IMyBinaryHeap<T> {
 		pushUp(size() - 1);
 	}
 	
-	@Override
-	public T get(int i) {
+	protected T get(int i) {
 		return this.list.peek(i);
 	}
 	
-	@Override
-	public T getLeft(int i) {
+	protected T getLeft(int i) {
 		return get(2 * i + 1);
 	}
 
-	@Override
-	public T getRight(int i) {
+	protected T getRight(int i) {
 		return get(2 * i + 2);
 	}
 
 
-	@Override
-	public T getUp(int i) {
+	protected T getUp(int i) {
 		return get((i - 1) / 2);
-	}
-
-	@Override
-	public T pop(int i) {
-		return null;
-	}
-	
-	@Override
-	public T popLeft(int i) {
-		return null;
-	}
-
-	@Override
-	public T popRight(int i) {
-		return null;
-	}
-	
-	@Override
-	public T popUp(int i) {
-		return null;
-	}
-
-	@Override
-	public void mergeWith(IMyBinaryHeap<T> heap) {
-		
 	}
 
 	@Override
@@ -69,37 +48,46 @@ public class MyBinaryHeap<T extends Comparable<T>> implements IMyBinaryHeap<T> {
 	}
 
 	@Override
-	public int growth() {
-		return 0;
-	}
-
-	@Override
 	public void pushDown(int i) {
-		BinaryHeapElement<T> t = new BinaryHeapElement<T>(i, get(i));
-		BinaryHeapElement<T> tLeft = new BinaryHeapElement<T>(2 * i + 1, getLeft(i));
-		BinaryHeapElement<T> tRight = new BinaryHeapElement<T>(2 * i  + 2, getRight(i));
-		if(tLeft != null && t.getContent().compareTo(tLeft.getContent()) < 0) {
-			BinaryHeapElement<T> tSwitch = tLeft;
-			tLeft = t;
-			t = tSwitch;
-			tSwitch = null;
-			this.list.set(tLeft.getNumber(), t.getContent());
-			pushDown(tLeft.getNumber());
+		T tLeft = null;
+		T tRight = null;
+		try {
+			tLeft = getLeft(i);
+			tRight = getRight(i);
+		} catch (NullPointerException e) {}
+		int max;
+		if(tLeft == null) {
+			max = 2 * i + 2;
+		} else if(tRight == null) {
+			max = 2 * i + 1;
+		} else {
+			max = comparator == null ? tLeft.compareTo(tRight) : comparator.compare(tLeft, tRight) >= 0 ? 2 * i + 1 : 2 * i + 2;
 		}
-		if(tRight != null) {
-			BinaryHeapElement<T> tSwitch = tRight;
-			tRight = t;
-			t = tSwitch;
-			tSwitch = null;
-			this.list.set(tRight.getNumber(), t.getContent());
-			pushDown(tRight.getNumber());
+		if(max <= size() && i >= 0 && i <= size() 
+				&& (comparator == null ? get(i).compareTo(get(max)) : comparator.compare(get(i), get(max))) <= 0) {
+			this.list.swap(i, max);
+			pushDown(max);
 		}
+	}
+	
+	public MyListTL<T> sort() {
+		MyListTL<T> r = new MyListTL<T>();
+		final int heapSize = size();
+		for(int i = 0; i < heapSize; i++) {
+			int last = heapSize - 1 - i;
+			r.add(get(0));
+			this.list.swap(0, last);
+			this.list.remove(last);
+			pushDown(0);
+		}
+		return r;
 	}
 
 	@Override
 	public void pushUp(int i) {
 		T parent = getUp(i), current = get(i);
-		if(current.compareTo(parent) > 0) {
+		int eq = comparator == null ? current.compareTo(parent) : comparator.compare(current, parent);
+		if(eq > 0) {
 			T temp = parent;
 			this.list.set((i - 1) / 2, current);
 			this.list.set(i, temp);
@@ -108,53 +96,64 @@ public class MyBinaryHeap<T extends Comparable<T>> implements IMyBinaryHeap<T> {
 	}
 
 	@Override
-	public int search(T a) {
-		if(a.equals(get(0))) {
-			return 0;
-		} 
-		if(getLeft(0) == null & getRight(0) == null) {
-			return -1;
-		}
-		MyStack<BinaryHeapElement<T>> stack = new MyStack<BinaryHeapElement<T>>();
-		MyListTL<BinaryHeapElement<T>> proceed = new MyListTL<BinaryHeapElement<T>>();
-		proceed.add(new BinaryHeapElement<T>(0, get(0)));
-		T left0 = getLeft(0), right0 = getRight(0);
-		if (left0 != null) {
-			stack.add(new BinaryHeapElement<T>(2, left0));
-		}
-		if (right0 != null) {
-			stack.add(new BinaryHeapElement<T>(1, right0));
-		}
-		while(stack.size() != 0) {
-			BinaryHeapElement<T> t = (BinaryHeapElement<T>) stack.top();  
-			if(proceed.contains(t)) {
-				stack.pop();
+	public void search(int from, UnaryOperator<T> operation) {
+		MyStack<Integer> s = new MyStack<>();
+		s.add(from);
+		boolean[] used = new boolean[size()];
+		while(s.size() != 0) {
+			int v = s.top();
+			used[v] = true;
+			int l = 2 * v + 1, r = 2 * v + 2;
+			if(l < size() && !used[l]) {
+				s.add(l);
+			} else if(r < size() && !used[r]) {
+				s.add(r);
 			} else {
-				if(a.equals(t.getContent())) {
-					return t.getNumber();
-				}
-				proceed.add(t);
-				T left = getLeft(t.getNumber()), right = getRight(t.getNumber());
-				if(left == null & right == null) {
-					return -1;
-				}
-				BinaryHeapElement<T> t1 = null;
-				if (left != null) {
-					t1 = new BinaryHeapElement<T>(t.getNumber() * 2 + 1, left);
-				}
-				BinaryHeapElement<T> t2 = null;
-				if (right != null) {
-					t2 = new BinaryHeapElement<T>(t.getNumber() * 2 + 2, right);
-				}
-				if(!proceed.contains(t2)) {
-					stack.add(t2);
-				}
-				if(!proceed.contains(t1)) {
-					stack.add(t1);
-				}
+				operation.apply(get(s.pop()));
 			}
 		}
-		return -1;
+	}
+
+	public int growth() {
+		return 0;
+	}
+
+	@Override
+	public T getMax() {
+		return get(0);
+	}
+	
+	public void printWithStack(int from) {
+		MyStack<Integer> s = new MyStack<>();
+		s.add(from);
+		boolean[] used = new boolean[size()];
+		while(s.size() != 0) {
+			int v = s.top();
+			used[v] = true;
+			int l = 2 * v + 1, r = 2 * v + 2;
+			if(l < size() && !used[l]) {
+				s.add(l);
+			} else if(r < size() && !used[r]) {
+				s.add(r);
+			} else {
+				System.out.print(s.pop() + " ");
+			}
+		}
+	}
+	
+	public void printRecursive(int from) {
+		if(2 * from + 1 < size()) {
+			printRecursive(2 * from + 1);
+		}
+		if(2 * from + 2 < size()) {
+			printRecursive(2 * from + 2);
+		}
+		System.out.print(get(from) + " ");
+	}
+	
+	@Override
+	public String toString() {
+		return this.list.toString();
 	}
 	
 }

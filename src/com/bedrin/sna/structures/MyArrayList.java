@@ -49,7 +49,7 @@ public class MyArrayList implements IMyList<Object> {
 	@Override
 	public Object get(int i) {
 		if(i > size || i < 0) {
-			throw new ElementNotFoundException();
+			throw new ElementNotFoundException(i);
 		}
 		return this.container[i];
 	}
@@ -57,7 +57,7 @@ public class MyArrayList implements IMyList<Object> {
 	@Override
 	public void remove(int i) {
 		if(i > size || i < 0) {
-			throw new ElementNotFoundException();
+			throw new ElementNotFoundException(i);
 		}
 		for(int j = i; j < this.container.length - 1; j++) {
 			this.container[j] = this.container[j + 1];

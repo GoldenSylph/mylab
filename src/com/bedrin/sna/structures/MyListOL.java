@@ -60,10 +60,9 @@ public class MyListOL<T> implements IMyList<T> {
 	
 	private ElementOL<T> getWithLeftOffset(int i, int offset) {
 		ElementOL<T> temp = tail;
-		ElementNotFoundException error = new ElementNotFoundException();
 		int n = i - offset;
 		if(n < 0 || n >= size()) {
-			throw error;
+			throw new ElementNotFoundException(n);
 		}
 		for(int j = 1; j <= n; j++) {
 			temp = temp.getNext();

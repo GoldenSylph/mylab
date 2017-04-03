@@ -1,6 +1,6 @@
 package com.bedrin.sna.utils;
 
-public class Pair<T extends Comparable<T>> implements Comparable<T> {
+public class Pair<T extends Comparable<T>>{
 	private T x;
 	private T y;
 	
@@ -24,10 +24,9 @@ public class Pair<T extends Comparable<T>> implements Comparable<T> {
 	public T getY() {
 		return y;
 	}
-
-	@Override
-	public int compareTo(T o) {
-		return this.x.compareTo(y);
-	}
 	
+	public static <E extends Comparable<E>> int difference(E y1, E y2) {
+		return y1.compareTo(y2);
+	}
+
 }

@@ -10,6 +10,10 @@ public class ElementTL<T> {
 		this.content = content;
 	}
 	
+	public ElementTL(ElementTL<T> element) {
+		this(element.getContent());
+	}
+	
 	@Override
 	public String toString() {
 		String result;
@@ -41,6 +45,11 @@ public class ElementTL<T> {
 		return previous;
 	}
 
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
+	}
+	
 	public void setPrevious(ElementTL<T> previous) {
 		this.previous = previous;
 	}

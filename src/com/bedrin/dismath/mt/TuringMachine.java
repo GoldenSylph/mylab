@@ -1,18 +1,22 @@
 package com.bedrin.dismath.mt;
 
 import com.bedrin.dismath.exceptions.Command;
-import com.bedrin.dismath.interfaces.ITable;
+import com.bedrin.dismath.interfaces.IFunction;
 
 public class TuringMachine {
 	
 	private int currentState;
-	private ITable instructions;
+	private IFunction instructions;
 	private StringBuffer src;
 	
-	public TuringMachine(ITable instructions, String source) {
-		this.currentState = 0;
+	public TuringMachine(IFunction instructions, String source, int beginState) {
+		this.currentState = beginState;
 		this.instructions = instructions;
 		this.src = new StringBuffer(source);
+	}
+	
+	public TuringMachine(IFunction instructions, String source) {
+		this(instructions, source, 0);
 	}
 	
 	public void work() {
@@ -26,17 +30,14 @@ public class TuringMachine {
 					case '^':
 						this.instructions.forEmpty(start, currentState, src);
 						break;
-					
 					case '0':
 						this.instructions.forZero(start, currentState, src);
 						break;
-						
 					case '1':
 						this.instructions.forOne(start, currentState, src);
 						break;
-						
 					default:
-						throw new RuntimeException("Unknown Symbol found in " + start + "position: " + t);
+						throw new RuntimeException("Unknown symbol found in " + start + " position: " + t);
 				}
 			} catch (Command e) {
 				currentState += e.getState();
