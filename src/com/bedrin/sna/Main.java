@@ -1,8 +1,17 @@
 package com.bedrin.sna;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+
 import com.bedrin.sna.structures.BilliardsHeap;
 import com.bedrin.sna.structures.MyBinaryHeap;
 import com.bedrin.sna.structures.MyListTL;
+import com.bedrin.sna.structures.MyQueue;
 import com.bedrin.sna.structures.MyQueueWithStacks;
 import com.bedrin.sna.structures.MyStack;
 import com.bedrin.sna.utils.Ball;
@@ -11,10 +20,63 @@ public class Main {
 	
 	public static void main(String[] args) {
 		//billiardHeap();
-		//heapTest();
+		//heapTest()
 		//listTest();
 		myQueueWithMinTest();
 	}
+	
+	public static Map<String, Integer> words(List<String> lst) {
+		HashMap<String, Integer> r = new HashMap<String, Integer>();
+		lst.forEach((v) -> {
+		});
+		return r;
+	}
+	
+	public static <V, K> Map<V, K> transform(Map<K, V> map) {
+		return null;
+	}
+	
+	public static void encoding() {
+		File f = encode(new File("en_input.txt"), "xb");
+		FileReader fr = null;	
+		try {
+			fr = new FileReader(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public static File encode(File f, String key) {
+		if(key.length() > 2) {
+			throw new RuntimeException("Wrong key!");
+		}
+		File r = new File("input/encoded.txt");
+		if(!r.exists()) {
+			try {
+				r.createNewFile();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		}
+		MyQueue<Integer> c = new MyQueue<>();
+		FileReader s = null;
+		try {
+			s = new FileReader(f);
+		} catch (FileNotFoundException e) {
+			e.printStackTrace();
+		}
+		try {
+			for(int i = 0; i < f.length(); i++) {
+				c.add(s.read());
+				c.add(s.read());
+				
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+		return r;
+	}
+	
 	
 	public static void bracketsExercise() {
 		String simpleRight = "(())((()())(()))";

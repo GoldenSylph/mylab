@@ -118,6 +118,14 @@ public class MyBinaryHeap<T extends Comparable<T>> implements IMyBinaryHeap<T> {
 		return 0;
 	}
 
+	public T removeMax() {
+		int l = size() - 1;
+		this.list.swap(0, l);
+		T r = this.list.get(l);
+		this.list.remove(l);
+		return r;
+	}
+	
 	@Override
 	public T getMax() {
 		return get(0);
