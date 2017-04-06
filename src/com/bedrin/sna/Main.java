@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import com.bedrin.sna.structures.BilliardsHeap;
 import com.bedrin.sna.structures.MyBinaryHeap;
@@ -19,16 +20,16 @@ import com.bedrin.sna.utils.Ball;
 public class Main {
 	
 	public static void main(String[] args) {
+		//System.out.println("В " + (Long.MAX_VALUE / 3_600_000 / 24 / 365 + 1970) + " году.");
 		//billiardHeap();
 		//heapTest()
 		//listTest();
-		myQueueWithMinTest();
+		//myQueueWithMinTest();
 	}
 	
-	public static Map<String, Integer> words(List<String> lst) {
-		HashMap<String, Integer> r = new HashMap<String, Integer>();
-		lst.forEach((v) -> {
-		});
+	public static <T> Map<String, T> words(List<String> lst) {
+		HashMap<String, T> r = new HashMap<String, T>();
+		
 		return r;
 	}
 	

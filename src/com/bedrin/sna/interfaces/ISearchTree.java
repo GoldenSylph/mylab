@@ -1,7 +1,8 @@
 package com.bedrin.sna.interfaces;
 
-public interface ISearchTree <T extends Comparable<T>>{
-	void add(T t);
-	boolean find(T t);
-	boolean remove(T t);
+public interface ISearchTree<K extends Comparable<K>, V extends Comparable<V>> {
+	void add(K key, V value);
+	V get(K key);
+	void remove(K key);
+	
 }
