@@ -12,21 +12,33 @@ public class MyQueue<T> implements IMyQueue<T> {
 	
 	@Override
 	public void add(T o) {
-		list.insert(0, o);
+		if(size() == 0) {
+			list.add(o);
+		} else {
+			list.insert(0, o);
+		}
 	}
 
 	@Override
 	public T first() {
-		return list.get(size() - 1);
+		T r = pop();
+		add(r);
+		return r;
 	}
 
 	@Override
 	public T pop() {
-		T r = first();
-		list.remove(size() - 1);
+		int last = size() - 1;
+		T r = list.get(last);
+		list.remove(last);
 		return r;
 	}
 
+	@Override
+	public String toString() {
+		return list.toString();
+	}
+	
 	@Override
 	public int size() {
 		return list.size();

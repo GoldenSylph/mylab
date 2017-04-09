@@ -2,7 +2,7 @@ package com.bedrin.sna.structures;
 
 import com.bedrin.sna.interfaces.ISearchTree;
 
-public class SearchTree<K extends Comparable<K>, V extends Comparable<V>> implements ISearchTree<K, V>{
+public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>{
 
 	private Node<K, V> root;
 	
@@ -82,19 +82,19 @@ public class SearchTree<K extends Comparable<K>, V extends Comparable<V>> implem
         		}
         	}
         } else {
-                Node<K, V> leftMost = x.right;
-                y = null;
-                while(leftMost.left != null) {
-                	y = leftMost;
-                	leftMost = leftMost.left;
-                }
-                if(y != null) {
-                	y.left = leftMost.right;
-                } else {
-                	x.right = leftMost.right;
-                }
-                x.key = leftMost.key;
-                x.value = leftMost.value;
+        	Node<K, V> leftMost = x.right;
+        	y = null;
+        	while(leftMost.left != null) {
+        		y = leftMost;
+        		leftMost = leftMost.left;
+        	}
+        	if(y != null) {
+        		y.left = leftMost.right;
+        	} else {
+        		x.right = leftMost.right;
+        	}
+        	x.key = leftMost.key;
+        	x.value = leftMost.value;
         }
 	}
 	

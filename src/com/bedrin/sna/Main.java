@@ -3,11 +3,11 @@ package com.bedrin.sna;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
 import com.bedrin.sna.structures.BilliardsHeap;
 import com.bedrin.sna.structures.MyBinaryHeap;
@@ -25,6 +25,7 @@ public class Main {
 		//heapTest()
 		//listTest();
 		//myQueueWithMinTest();
+		encoding();
 	}
 	
 	public static <T> Map<String, T> words(List<String> lst) {
@@ -38,39 +39,65 @@ public class Main {
 	}
 	
 	public static void encoding() {
-		File f = encode(new File("en_input.txt"), "xb");
-		FileReader fr = null;	
+		File input = new File("input/en_input.txt");
+		charPrint(input);
+		File output = code(input, "xb");
+		charPrint(output);
+		output = code(output, "xb");
+		charPrint(output);
+	}
+	
+	private static void charPrint(File f) {
+		try (FileReader fr = new FileReader(f)) {
+			for(int i = 0; i < f.length(); i++) {
+				System.out.print((char) fr.read());
+			}
+			System.out.println();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+	}
+	
+	private static File code(File f, String key) {
+		if(key.length() > 2) {
+			throw new RuntimeException("Wrong key!");
+		}
+		File r = new File("input/encoded.txt");
+		MyQueue<Character> c = new MyQueue<>();
+		FileReader fr = null;
 		try {
 			fr = new FileReader(f);
 		} catch (FileNotFoundException e) {
 			e.printStackTrace();
 		}
-	}
-	
-	public static File encode(File f, String key) {
-		if(key.length() > 2) {
-			throw new RuntimeException("Wrong key!");
-		}
-		File r = new File("input/encoded.txt");
-		if(!r.exists()) {
+		try {
+			long l = f.length();
+			for(int i = 0; i < l; i++, l -= 2) {
+				boolean isOne = l != 1;
+				c.add((char) fr.read());
+				if (isOne) {
+					c.add((char) fr.read());
+				}
+				c.add((char) (c.pop() ^ key.charAt(0)));
+				if (isOne) {
+					c.add((char) (c.pop() ^ key.charAt(1)));
+				}
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		} finally {
 			try {
-				r.createNewFile();
+				fr.close();
 			} catch (IOException e) {
 				e.printStackTrace();
 			}
 		}
-		MyQueue<Integer> c = new MyQueue<>();
-		FileReader s = null;
-		try {
-			s = new FileReader(f);
-		} catch (FileNotFoundException e) {
-			e.printStackTrace();
-		}
-		try {
-			for(int i = 0; i < f.length(); i++) {
-				c.add(s.read());
-				c.add(s.read());
-				
+		System.out.println(c);
+		try (FileWriter fw = new FileWriter(r)) {
+			while (c.size() != 0) {
+				Character temp = c.pop();
+				System.out.println(temp);
+				fw.append(temp);
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
