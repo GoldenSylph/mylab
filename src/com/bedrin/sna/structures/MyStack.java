@@ -28,6 +28,11 @@ public class MyStack<T> implements IMyStack<T> {
 	}
 
 	@Override
+	public String toString() {
+		return list.toString();
+	}
+	
+	@Override
 	public int size() {
 		return list.size();
 	}

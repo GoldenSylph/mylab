@@ -5,16 +5,15 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
 
 import com.bedrin.sna.structures.BilliardsHeap;
 import com.bedrin.sna.structures.MyBinaryHeap;
 import com.bedrin.sna.structures.MyListTL;
 import com.bedrin.sna.structures.MyQueue;
-import com.bedrin.sna.structures.MyQueueWithStacks;
 import com.bedrin.sna.structures.MyStack;
+import com.bedrin.sna.structures.SearchTree;
+import com.bedrin.sna.structures.SplayTree;
+import com.bedrin.sna.structures.YandexCache;
 import com.bedrin.sna.utils.Ball;
 
 public class Main {
@@ -25,37 +24,82 @@ public class Main {
 		//heapTest()
 		//listTest();
 		//myQueueWithMinTest();
-		encoding();
+		//encoding();
+		//searchTree();
+		//splayTrees();
+		yandexCache();
 	}
 	
-	public static <T> Map<String, T> words(List<String> lst) {
-		HashMap<String, T> r = new HashMap<String, T>();
-		
-		return r;
+	public static void searchTree() {
+		SearchTree<String, Integer> s = new SearchTree<>();
+		s.add("oleg", 1);
+		s.add("aizat", 2);
+		s.add("damir", 3);
+		System.out.println(s.get("oleg"));
+		System.out.println(s.get("aizat"));
+		System.out.println(s.get("damir"));
+		s.remove("aizat");
+		System.out.println(s.get("aizat"));
 	}
 	
-	public static <V, K> Map<V, K> transform(Map<K, V> map) {
-		return null;
+	public static void yandexCache() {
+		int t = 3;
+		YandexCache<Integer, Integer> test = new YandexCache<>(t);
+		for(int i = 0; i < test.CAPACITY; i++) {
+			test.put(i, i + 1);
+			System.out.println(i + ", " + (i + 1));
+		}
+		System.out.println();
+		test.put(8, 9);
+		System.out.println(test.get(5));
+	}
+	
+	public static void splayTrees() {
+		SplayTree<Integer, Integer> test = new SplayTree<>();
+		test.add(1, 2);
+		test.add(2, 3);
+		test.add(3, 4);
+		System.out.println(test.get(1));
+		System.out.println(test.get(2));
+		System.out.println(test.get(3));
+		System.out.println();
+		test.remove(2);
+		System.out.println(test.get(1));
+		System.out.println(test.get(3));
 	}
 	
 	public static void encoding() {
-		File input = new File("input/en_input.txt");
-		charPrint(input);
-		File output = code(input, "xb");
-		charPrint(output);
-		output = code(output, "xb");
-		charPrint(output);
+		
+//		System.out.println("Source:");
+//		File input = new File("input/en_input.txt");
+//		charPrint(input);
+//		
+//		System.out.println("Encoded:");
+//		File output = code(input, "xc");
+//		charPrint(output);
+//		
+//		System.out.println("Decoded:");
+//		output = code(output, "xc");
+//		charPrint(output);
+		String input = "abacaba";
+		String output = code(input, "xc");
+		System.out.println(output);
+		output = code(output, "xc");
+		System.out.println(output);
 	}
 	
-	private static void charPrint(File f) {
+	private static String charPrint(File f) {
+		StringBuilder sb = new StringBuilder();
 		try (FileReader fr = new FileReader(f)) {
 			for(int i = 0; i < f.length(); i++) {
-				System.out.print((char) fr.read());
+				sb.append((char) fr.read());
 			}
-			System.out.println();
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+		String temp = sb.toString();
+		System.out.println(temp);
+		return temp;
 	}
 	
 	private static File code(File f, String key) {
@@ -71,17 +115,14 @@ public class Main {
 			e.printStackTrace();
 		}
 		try {
-			long l = f.length();
-			for(int i = 0; i < l; i++, l -= 2) {
-				boolean isOne = l != 1;
-				c.add((char) fr.read());
-				if (isOne) {
-					c.add((char) fr.read());
-				}
-				c.add((char) (c.pop() ^ key.charAt(0)));
-				if (isOne) {
-					c.add((char) (c.pop() ^ key.charAt(1)));
-				}
+			for(int i = 0; i < f.length() / 2; i++) {
+				c.push((char) fr.read());
+				c.push((char) fr.read());
+				c.push((char) (c.pop() ^ key.charAt(0)));
+				c.push((char) (c.pop() ^ key.charAt(1)));
+			}
+			if(f.length() % 2 == 0) {
+				c.push((char) (fr.read() ^ key.charAt(0)));
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
@@ -92,17 +133,50 @@ public class Main {
 				e.printStackTrace();
 			}
 		}
-		System.out.println(c);
 		try (FileWriter fw = new FileWriter(r)) {
 			while (c.size() != 0) {
-				Character temp = c.pop();
-				System.out.println(temp);
-				fw.append(temp);
+				fw.append(c.pop());
 			}
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
 		return r;
+	}
+	
+	private static String code(String f, String key) {
+//		if(key.length() > 2) {
+//			throw new RuntimeException("Wrong key!");
+//		}
+//		MyQueue<Character> c = new MyQueue<>();
+//		MyQueue<Character> buffer = new MyQueue<>();
+//		for(int i = 0; i < f.length(); i++) {
+//			//TODO
+//		}
+//		try {
+//			for(int i = 0; i < f.length() / 2; i++) {
+//				c.push(sb.);
+//				c.push((char) fr.read());
+//				c.push((char) (c.pop() ^ key.charAt(0)));
+//				c.push((char) (c.pop() ^ key.charAt(1)));
+//			}
+//			if(f.length() % 2 == 0) {
+//				c.push((char) (fr.read() ^ key.charAt(0)));
+//			}
+//		} catch (IOException e) {
+//			e.printStackTrace();
+//		} finally {
+//			try {
+//				fr.close();
+//			} catch (IOException e) {
+//				e.printStackTrace();
+//			}
+//		}
+//		StringBuilder sb = new StringBuilder();
+//		while(c.size() != 0) {
+//			sb.append(c.pop());
+//		}
+//		return sb.toString();
+		return "";
 	}
 	
 	
@@ -172,7 +246,7 @@ public class Main {
 	}
 	
 	public static void myQueueWithMinTest() {
-		MyQueueWithStacks<Integer> q = new MyQueueWithStacks<>();
+		MyQueue<Integer> q = new MyQueue<>();
 		q.push(5);
 		q.push(1);
 		q.push(9);

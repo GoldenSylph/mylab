@@ -1,47 +1,53 @@
 package com.bedrin.sna.structures;
 
-import com.bedrin.sna.interfaces.IMyQueue;
+import com.bedrin.sna.utils.Pair;
 
-public class MyQueue<T> implements IMyQueue<T> {
-
-	private MyListTL<T> list;
+public class MyQueue<T extends Comparable<T>> {
+	
+	private MyPairStack<T> first;
+	private MyPairStack<T> second;
 	
 	public MyQueue() {
-		list = new MyListTL<T>();
+		first = new MyPairStack<T>();
+		second = new MyPairStack<T>();
 	}
 	
-	@Override
-	public void add(T o) {
-		if(size() == 0) {
-			list.add(o);
-		} else {
-			list.insert(0, o);
-		}
+	public void push(T t) {
+		first.add(new Pair<T>(t, t));
 	}
-
-	@Override
+	
+	public T getMin() {
+		if(first.size() == 0) {
+			return second.getMin();
+		} 
+		if(second.size() == 0) {
+			return first.getMin();
+		} 
+		return first.getMin().compareTo(second.getMin()) == -1 ? first.getMin() : second.getMin();
+	}
+	
 	public T first() {
-		T r = pop();
-		add(r);
-		return r;
+		T t = pop();
+		push(t);
+		return t;
 	}
-
-	@Override
+	
 	public T pop() {
-		int last = size() - 1;
-		T r = list.get(last);
-		list.remove(last);
-		return r;
+		if(second.size() == 0) {
+			while(first.size() != 0) {
+				second.add(first.pop());
+			}
+		}
+		return second.pop().getX();
 	}
-
+	
 	@Override
 	public String toString() {
-		return list.toString();
+		return first.toString() + second.toString();
 	}
 	
-	@Override
 	public int size() {
-		return list.size();
+		return first.size() + second.size();
 	}
 
 }

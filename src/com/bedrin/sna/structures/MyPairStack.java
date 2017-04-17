@@ -16,6 +16,11 @@ public class MyPairStack<T extends Comparable<T>> extends MyStack<Pair<T>> {
 		super.add(a);
 	}
 	
+	@Override
+	public String toString() {
+		return this.list.toString();
+	}
+	
 	public T getMin() {
 		return top().getY();
 	}

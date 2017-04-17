@@ -6,6 +6,20 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
 
 	private Node<K, V> root;
 	
+	public SearchTree() {}
+	
+	protected SearchTree(Node<K, V> root) {
+		this.root = root;
+	}
+	
+	protected void setRoot(Node<K, V> root) {
+		this.root = root;
+	}
+	
+	protected Node<K, V> getRoot() {
+		return root;
+	}
+	
 	@Override
 	public void add(K key, V value) {
 		Node<K, V> x = root, y = null;
@@ -37,11 +51,15 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
 
 	@Override
 	public V get(K key) {
+		return peek(key).value;
+	}
+	
+	protected Node<K, V> peek(K key) {
 		Node<K, V> x = root;
         while (x != null) {
         	int cmp = key.compareTo(x.key);
         	if (cmp == 0) {
-        		return x.value;
+        		return x;
         	}
         	if (cmp < 0) {
         		x = x.left;
@@ -50,6 +68,24 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         	}
         }
         return null;
+	}
+	
+	protected Node<K, V> peekPrevious(K key) {
+		Node<K, V> x = root;
+		Node<K, V> previous = null;
+        while (x != null) {
+        	int cmp = key.compareTo(x.key);
+        	if (cmp == 0) {
+        		return previous;
+        	}
+        	previous = x;
+        	if (cmp < 0) {
+        		x = x.left;
+        	} else {
+        		x = x.right;
+        	}
+        }
+        return previous;
 	}
 
 	@Override
@@ -98,7 +134,7 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         }
 	}
 	
-	private static class Node<K, V> {
+	protected static class Node<K, V> {
 		public K key;
         public V value;
         public Node<K, V> left, right;
