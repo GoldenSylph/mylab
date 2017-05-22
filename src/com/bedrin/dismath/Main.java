@@ -11,7 +11,6 @@ public class Main {
 		m.work();
 		TuringMachine f = new TuringMachine(new FUFunction(), "^^^1^^^");
 		f.work();
-
 	}
 
 }

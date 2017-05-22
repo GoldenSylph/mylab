@@ -26,8 +26,8 @@ public class Main {
 		//myQueueWithMinTest();
 		//encoding();
 		//searchTree();
-		//splayTrees();
-		yandexCache();
+		splayTrees();
+		//yandexCache();
 	}
 	
 	public static void searchTree() {
@@ -51,21 +51,29 @@ public class Main {
 		}
 		System.out.println();
 		test.put(8, 9);
-		System.out.println(test.get(5));
+		System.out.println(test.get(7));
 	}
 	
 	public static void splayTrees() {
 		SplayTree<Integer, Integer> test = new SplayTree<>();
-		test.add(1, 2);
-		test.add(2, 3);
-		test.add(3, 4);
-		System.out.println(test.get(1));
-		System.out.println(test.get(2));
-		System.out.println(test.get(3));
+		test.add(5, 5);
+		test.bfs();
 		System.out.println();
-		test.remove(2);
-		System.out.println(test.get(1));
-		System.out.println(test.get(3));
+		test.add(7, 7);
+		test.bfs();
+		System.out.println();
+		test.get(5);
+		test.bfs();
+		System.out.println();
+		test.add(3, 3);
+		test.bfs();
+		System.out.println();
+		test.add(4, 4);
+		test.bfs();
+		System.out.println();
+		test.get(7);
+		test.bfs();
+		System.out.println();
 	}
 	
 	public static void encoding() {

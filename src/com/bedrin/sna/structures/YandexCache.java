@@ -8,11 +8,7 @@ public class YandexCache<K extends Comparable<K>, V> extends SplayTree<K, V> imp
 	private long numberOfElements;
 	
 	public YandexCache(int size) {
-		long t = 0;
-		for(int i = size; i != 0; i--) {
-			t += (long) Math.pow(2, i - 1);
-		}
-		CAPACITY = t;
+		CAPACITY = (long) Math.pow(2, size + 1) - 1;
 		numberOfElements = 0;
 	}
 	
@@ -26,7 +22,7 @@ public class YandexCache<K extends Comparable<K>, V> extends SplayTree<K, V> imp
 	public void put(K key, V value) {
 		if(numberOfElements >= CAPACITY) {
 			forEachOnLevel(getRoot(), 1, height(), (node) -> {
-				super.remove(node.key);
+				remove(node.key);
 			});
 		}
 		super.add(key, value);

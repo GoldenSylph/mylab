@@ -143,5 +143,10 @@ public class SearchTree<K extends Comparable<K>, V> implements ISearchTree<K, V>
         	this.key = key;
         	this.value = value;
         }
+        
+        @Override
+        public String toString() {
+        	return "(" + key + ", " + value + ")";
+        }
 	}
 }
